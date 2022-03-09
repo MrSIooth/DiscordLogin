@@ -2,6 +2,9 @@ import logo from "./logo.svg";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import AccountsRows from './AccountsRows';
+import Collapse from 'react-bootstrap/Collapse'
+import Button from 'react-bootstrap/Button'
+import 'bootstrap/dist/css/bootstrap.min.css';
 var browser = require("webextension-polyfill");
 
 const App = () => {
@@ -10,6 +13,7 @@ const App = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [addError, setAddError] = useState('');
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -32,7 +36,7 @@ const App = () => {
 
   const setAccount = async (email, password) => {
     if (email === "" || password === ""){
-        setAddError("Missing param")
+        setAddError("Missing parameter")
       return;
     }
     const key = "DiscordLogin"
@@ -46,7 +50,7 @@ const App = () => {
       accounts = []
     for (let account of accounts) {
       if (account.email === email) {
-        setAddError("account already exist")
+        setAddError("Account already exist")
         return
       }
     }
@@ -106,22 +110,84 @@ const App = () => {
       <div>
         <AccountsRows accounts={(accounts)? accounts : []} removeAccount={removeAccount}/>
       </div>
-      <div style={{margin:"10px 0px 0px 0px"}}>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        // justifyContent: "space-between",
+        alignItems: "center",
+        borderTop: (accounts.length === 0)? '2px solid hsla(0,0%,100%,0.06)' : "",
+        borderBottom: '2px solid hsla(0,0%,100%,0.06)',
+        padding: "10px 0px 10px 0px",
+        margin: "0px 10px 0px 10px",
+        textAlign: "start",
+      }}>
         <form onSubmit={handleSubmit} className="login">
           <div style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-evenly"
+            justifyContent: "space-between"
           }}>
-
-            <input style={{width: "40%"}} type="email" id="email-input" name="email" value={email} onChange={e => setEmail(e.target.value)} />
-        
-            <input style={{width: "40%"}} type="password" id="password-input" name="password" value={password} onChange={e =>setPassword(e.target.value)} />
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}>
+              <input type="email" id="email-input" name="email" value={email} placeholder="email" onChange={e => setEmail(e.target.value)}
+                style={{
+                  width: "47%",
+                  backgroundColor: "#2f3136",
+                  border: "0px none",
+                  borderRadius: "7px",
+                  padding: "0px",
+                  textIndent: "10px",
+                  color: "white",
+            }}
+              />
           
-            <input style={{borderRadius: "10%", backgroundColor: "hsl(139, 47.3%, 43.9%)", color: "white", border: "0 none"}} type="submit" value="Add" />
+              <input type="password" id="password-input" name="password" value={password} placeholder="password" onChange={e =>setPassword(e.target.value)}
+                style={{
+                  width: "47%",
+                  backgroundColor: "#2f3136",
+                  border: "0px none",
+                  borderRadius: "7px",
+                  padding: "0px",
+                  textIndent: "10px",
+                  color: "white",
+            }}
+              />
+            </div>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0px 0px 0px 7px",
+              padding: "0px"
+            }}>
+              <button type="submit" style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                border: "0px none",
+                width: "36px",
+                height: "36px",
+                backgroundColor: "#2f3136",
+                color: "hsl(359, 82.6%, 59.4%)",
+                margin: "0px 5px 0px 5px",
+                padding: "0px"
+              }}>
+              <img src="add-green.svg" alt="Add" style={{
+                width: "24px",
+                height: "24px"
+              }}/>
+              </button>
+            </div>
           </div>
         </form> 
+        <div style={{color: "#ed4043"}}>
+
           {(addError && addError !== "") && <p style={{margin: "5px 0px 0px 0px"}}>{addError}</p>}
+        </div>
       </div>
     </div>
   );

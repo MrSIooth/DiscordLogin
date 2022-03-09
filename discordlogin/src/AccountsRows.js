@@ -14,9 +14,8 @@ const AccountsRows = (props) => {
         alignItems: "center",
         borderTop: (topBorder)? '2px solid hsla(0,0%,100%,0.06)' : "",
         borderBottom: '2px solid hsla(0,0%,100%,0.06)',
-        padding: "0px 0px 0px 0px",
+        padding: "10px 0px 10px 0px",
         margin: "0px 10px 0px 10px",
-        height: "60px",
         textAlign: "start",
       }}>
         <div style={{
