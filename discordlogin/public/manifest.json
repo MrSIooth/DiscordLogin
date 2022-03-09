@@ -1,0 +1,17 @@
+{
+  "name": "DiscordLogin",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "DiscordLogin",
+  "icons": {
+      "512": "Discord-Logo.png"
+  },
+  "browser_action": {
+      "default_icon": "Discord-Logo.png",
+      "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+}
