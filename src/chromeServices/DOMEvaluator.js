@@ -1,5 +1,4 @@
 // import { runtime } from "webextension-polyfill";
-/*global chrome*/
 const browser = require("webextension-polyfill");
 const axios = require('axios');
 

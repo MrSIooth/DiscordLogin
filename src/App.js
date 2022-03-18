@@ -1,30 +1,15 @@
-/*global chrome*/
-import logo from "./logo.svg";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import AccountsRows from './AccountsRows';
-import Collapse from 'react-bootstrap/Collapse'
-import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
 var browser = require("webextension-polyfill");
 
 const App = () => {
-  const [url, setUrl] = useState("");
   const [accounts, setAccounts] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [addError, setAddError] = useState('');
   const [loginError, setLoginError] = useState('');
-
-  useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
-
-    browser.tabs &&
-      browser.tabs.query(queryInfo).then((tabs) => {
-        const url = tabs[0].url;
-        setUrl(url);
-      });
-  }, []);
 
   useEffect(() => {
     const key = "DiscordLogin"
