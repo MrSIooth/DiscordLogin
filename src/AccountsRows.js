@@ -7,7 +7,7 @@ const AccountsRows = (props) => {
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       browser.tabs.sendMessage(tabs[0].id, {email: email, password: password}).then((response) => {
         console.log(response);
-        props.loginErrorFunct("test")
+        // props.loginErrorFunct("test")
       });
     });
   }

@@ -1,22 +1,5 @@
-// import { runtime } from "webextension-polyfill";
 const browser = require("webextension-polyfill");
 const axios = require('axios');
-
-// browser.runtime.onMessage.addListener(
-//   function(request, sender, sendResponse) {
-//     console.log("hello ur here");
-//     console.log(localStorage)
-//     const user = {
-//       "email": "blbert.poulet@gmail.com",
-//       "password": "Bigbougleboss42"
-//     }
-//     axios.post(`https://discord.com/api/v9/auth/login`, user)
-//     .then(res => {
-//         console.log(res);
-//         console.log(res.data);
-//     }).catch(err => console.log(err));
-//   }
-// );
 
 browser.runtime.onMessage.addListener(
    (data, sender) => {
@@ -25,7 +8,7 @@ browser.runtime.onMessage.addListener(
         "email": data.email,
         "password": data.password
       }
-      axios.post(`https://discord.com/api/v9/auth/login`, user)
+      return axios.post(`https://discord.com/api/v9/auth/login`, user)
       .then(res => {
           console.log(res);
           console.log(res.data);
@@ -37,6 +20,7 @@ browser.runtime.onMessage.addListener(
             console.log("added token")
             window.location.reload();
           }, 50);
+          return
       }).catch(err => {
           console.log(err)
           if (err.response) {
