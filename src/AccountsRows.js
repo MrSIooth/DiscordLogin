@@ -5,9 +5,20 @@ var browser = require("webextension-polyfill");
 
 const AccountsRows = (props) => {
 
+  const connectAccount = (email, password) => {
+    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+      browser.tabs.sendMessage(tabs[0].id, {email: email, password: password}).then((response) => {
+        console.log(response);
+        props.loginErrorFunct("test")
+      });
+    });
+  }
+
   const accountRow = (email, password, topBorder) => {
     return (
-      <div style={{
+      <div onClick={() => {connectAccount(email, password)}}
+        class="div-btn"
+        style={{
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

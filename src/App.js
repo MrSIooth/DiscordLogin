@@ -1,3 +1,4 @@
+/*global chrome*/
 import logo from "./logo.svg";
 import React, { useEffect, useState } from "react";
 import "./App.css";
@@ -9,11 +10,11 @@ var browser = require("webextension-polyfill");
 
 const App = () => {
   const [url, setUrl] = useState("");
-  const [accounts, setAccounts] = useState("");
+  const [accounts, setAccounts] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [addError, setAddError] = useState('');
-  const [open, setOpen] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   useEffect(() => {
     const queryInfo = { active: true, lastFocusedWindow: true };
@@ -54,6 +55,11 @@ const App = () => {
         return
       }
     }
+    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    //   chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+    //     console.log(response);
+    //   });
+    // });
     setAddError("")
     setEmail("")
     setPassword("")
@@ -61,6 +67,10 @@ const App = () => {
     obj[key] = accounts
     browser.storage && browser.storage.sync.set(obj).then(() => {});
     setAccounts(accounts);
+  }
+
+  const loginErrorFunct = (error) => {
+    setLoginError(error)
   }
 
   const removeAccount = async (email) => {
@@ -107,15 +117,16 @@ const App = () => {
       }}>
         <img src="Discord-Logo+Wordmark-White.svg" alt="React Logo" style={{height: "50px"}}/>
       </header>
+      {(loginError && loginError !== "") && <p style={{margin: "5px 0px 0px 0px"}}>{loginError}</p>}
       <div>
-        <AccountsRows accounts={(accounts)? accounts : []} removeAccount={removeAccount}/>
+        <AccountsRows accounts={(accounts)? accounts : []} removeAccount={removeAccount} loginErrorFunct={loginErrorFunct}/>
       </div>
       <div style={{
         display: "flex",
         flexDirection: "column",
         // justifyContent: "space-between",
         alignItems: "center",
-        borderTop: (accounts.length === 0)? '2px solid hsla(0,0%,100%,0.06)' : "",
+        borderTop: (!accounts || accounts.length === 0)? '2px solid hsla(0,0%,100%,0.06)' : "",
         borderBottom: '2px solid hsla(0,0%,100%,0.06)',
         padding: "10px 0px 10px 0px",
         margin: "0px 10px 0px 10px",

@@ -8,9 +8,16 @@
   },
   "browser_action": {
       "default_icon": "Discord-Logo.png",
-      "default_popup": "popup.html"
+      "default_popup": "index.html"
   },
+  "content_scripts": [
+  {
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["./static/js/content.js"]
+  }
+  ],
   "permissions": [
+    "tabs",
     "activeTab",
     "storage"
   ]
