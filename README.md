@@ -21,6 +21,12 @@ git@github.com:MrSIooth/DiscordLogin.git
 
 -   Load the folder __DiscordLogin/build/__ with "Load unpacked".
 
+## How to build
+```shell
+npm install
+npm run build
+```
+
 ## Authors
 
 | [<img src="https://github.com/MrSIooth.png?size=85" width=85><br><sub>Victor GUYOT</sub>](https://github.com/MrSIooth)
