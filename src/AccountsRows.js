@@ -53,7 +53,9 @@ const AccountsRows = (props) => {
           alignItems: "center",
           margin: "0px 0px 0px 7px"
         }}>
-          <div onClick={() => {props.removeAccount(email)}} style={{
+          <div onClick={(event) => {
+            event.stopPropagation()
+            props.removeAccount(email)}} style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

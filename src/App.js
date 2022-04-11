@@ -40,11 +40,6 @@ const App = () => {
         return
       }
     }
-    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    //   chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-    //     console.log(response);
-    //   });
-    // });
     setAddError("")
     setEmail("")
     setPassword("")
@@ -86,7 +81,7 @@ const App = () => {
       className="App"
       style={{
         width: "375px",
-        height: "600px",
+        minHeight: "600px",
         backgroundColor: "#36393f",
         fontFamily: "Ginto,'Helvetica Neue',Helvetica,Arial,sans-serif;",
         fontWeight: "600",
