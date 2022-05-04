@@ -69,6 +69,16 @@ const App = () => {
     obj[key] = accounts
     browser.storage && browser.storage.sync.set(obj).then(() => {});
     setAccounts(accounts);
+    console.log(accounts);
+  }
+
+  const changeOrder = async (accounts) => {
+    const key = "DiscordLogin"
+    let obj = {}
+    obj[key] = accounts
+    browser.storage && browser.storage.sync.set(obj).then(() => {});
+    setAccounts(accounts);
+    console.log(accounts);
   }
 
   const handleSubmit = async (e) => {
@@ -99,8 +109,9 @@ const App = () => {
       </header>
       {(loginError && loginError !== "") && <p style={{margin: "5px 0px 0px 0px"}}>{loginError}</p>}
       <div>
-        <AccountsRows accounts={(accounts)? accounts : []} removeAccount={removeAccount} loginErrorFunct={loginErrorFunct}/>
-      </div>
+        {accounts.length > 0 && <AccountsRows accounts={accounts} removeAccount={removeAccount} loginErrorFunct={loginErrorFunct} changeOrder={changeOrder}/>
+        }
+        </div>
       <div style={{
         display: "flex",
         flexDirection: "column",

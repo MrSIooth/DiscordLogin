@@ -1,98 +1,83 @@
 import "./App.css";
-var browser = require("webextension-polyfill");
+import React, { useState, useEffect } from "react";
+import AccountsCard from './card';
+import styled from "@emotion/styled";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const QuoteItem = styled.div``;
+
 
 const AccountsRows = (props) => {
 
-  const connectAccount = (email, password) => {
-    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-      browser.tabs.sendMessage(tabs[0].id, {email: email, password: password}).then((response) => {
-        console.log(response);
-        // props.loginErrorFunct("test")
-      });
-    });
-  }
+  const [state, setState] = useState(props.accounts);
 
-  const accountRow = (email, password, topBorder) => {
+  useEffect(() => {
+    if (props.accounts !== state) {
+      setState(props.accounts);
+    }
+  }, [props.accounts, state]);
+  
+  function Quote({ quote, index }) {
     return (
-      <div onClick={() => {connectAccount(email, password)}}
-        class="div-btn"
-        style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderTop: (topBorder)? '2px solid hsla(0,0%,100%,0.06)' : "",
-        borderBottom: '2px solid hsla(0,0%,100%,0.06)',
-        padding: "10px 0px 10px 0px",
-        margin: "0px 10px 0px 10px",
-        textAlign: "start",
-      }}>
-        <div style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          flexGrow: "1",
-          overflow: "hidden",
-        }}>
-          <img src="discord-logo-white.png" alt="Logo" style={{height: "32px", margin: "0px 10px 0px 10px", flexBasis: "auto"}}/>
-          <div style={{
-            flexGrow: "1",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            overflow: "hidden",
-      }}>
-            <div style={{flexBasis: "47%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{email}</div>
-            <div style={{flexBasis: "47%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", webkitTextSecurity: "disc"}}>{password}</div>
-          </div>
-        </div>
-        <div style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          margin: "0px 0px 0px 7px"
-        }}>
-          <div onClick={(event) => {
-            event.stopPropagation()
-            props.removeAccount(email)}} style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            borderRadius: "50%",
-            width: "36px",
-            height: "36px",
-            backgroundColor: "#2f3136",
-            color: "hsl(359, 82.6%, 59.4%)",
-            margin: "0px 5px 0px 5px"
-          }}>
-            <img src="clear.svg" alt="Earse" style={{
-              width: "24px",
-              height: "24px"
-            }}/>
-          </div>
-        </div>
-      </div>
-    )
+      <Draggable draggableId={quote.email} index={index}>
+        {provided => (
+          <QuoteItem
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <AccountsCard account={quote} topBorder={index === 0} removeAccount={props.removeAccount}></AccountsCard>
+          </QuoteItem>
+        )}
+      </Draggable>
+    );
   }
+  
+  const CardList = React.memo(function CardList({ cards }) {
+    return cards.map((value, index) => (
+      <Quote quote={value} index={index} key={value.email}>
+      </Quote>
+    ));
+  });
 
-  const accountsRows = () => {
-    var rows = []
-    props.accounts.forEach((account, index) => {
-        rows.push(accountRow(account.email, account.password, index === 0));
-    })
-    return <div>{rows}</div>;
+  function onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const cards = reorder(
+      state,
+      result.source.index,
+      result.destination.index
+    );
+
+    setState(cards);
+    props.changeOrder(cards);
   }
 
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      color: "white",
-    }}>
-        {accountsRows()}
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="list">
+        {provided => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            <CardList cards={state} />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 
