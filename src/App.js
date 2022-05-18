@@ -107,7 +107,7 @@ const App = () => {
       }}>
         <img src="Discord-Logo+Wordmark-White.svg" alt="React Logo" style={{height: "50px"}}/>
       </header>
-      {(loginError && loginError !== "") && <p style={{margin: "5px 0px 0px 0px"}}>{loginError}</p>}
+      {(loginError && loginError !== "") && <p style={{margin: "0px 0px 10px 0px", color: "red"}}>{loginError}</p>}
       <div>
         {accounts.length > 0 && <AccountsRows accounts={accounts} removeAccount={removeAccount} loginErrorFunct={loginErrorFunct} changeOrder={changeOrder}/>
         }

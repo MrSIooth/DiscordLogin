@@ -7,6 +7,13 @@ const AccountCard = (props) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
           browser.tabs.sendMessage(tabs[0].id, {email: email, password: password}).then((response) => {
             console.log(response);
+            if (response.data.captcha_service) {
+              props.loginErrorFunct("Require Captcha")
+            } else if (response.data.code === 50035) {
+              props.loginErrorFunct("Invalid logins")
+            } else {
+              props.loginErrorFunct("")
+            }
           });
         });
       }
