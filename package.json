@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "INLINE_RUNTIME_CHUNK=false craco build",
+    "build": "CI=false INLINE_RUNTIME_CHUNK=false craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
