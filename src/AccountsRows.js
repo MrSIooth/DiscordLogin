@@ -34,7 +34,7 @@ const AccountsRows = (props) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <AccountsCard account={quote} topBorder={index === 0} removeAccount={props.removeAccount} loginErrorFunct={props.loginErrorFunct}></AccountsCard>
+            <AccountsCard account={quote} topBorder={index === 0} removeAccount={props.removeAccount} updateAccount={props.updateAccount} loginErrorFunct={props.loginErrorFunct}></AccountsCard>
           </QuoteItem>
         )}
       </Draggable>

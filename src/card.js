@@ -5,13 +5,14 @@ const AccountCard = (props) => {
 
     const connectAccount = (email, password) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-          browser.tabs.sendMessage(tabs[0].id, {email: email, password: password}).then((response) => {
+          browser.tabs.sendMessage(tabs[0].id, {email: email, password: password, relaod: true}).then((response) => {
             console.log(response);
             if (response.data.captcha_service) {
               props.loginErrorFunct("Require Captcha")
-            } else if (response.data.code === 50035) {
+            } else if (response.code === 50035) {
               props.loginErrorFunct("Invalid logins")
-            } else {
+            } else if (response.code === 200) {
+              props.updateAccount(email, password,response.data?.username, response.data?.avatar)
               props.loginErrorFunct("")
             }
           });
@@ -41,7 +42,7 @@ const AccountCard = (props) => {
           flexGrow: "1",
           overflow: "hidden",
         }}>
-          <img src="discord-logo-white.png" alt="Logo" style={{height: "32px", margin: "0px 10px 0px 10px", flexBasis: "auto"}}/>
+          <img src={((props.account.avatar) ? props.account.avatar : "discord-logo-white.png")} alt="Logo" style={{height: "32px", margin: "0px 10px 0px 10px", flexBasis: "auto", borderRadius: "50%"}}/>
           <div style={{
             flexGrow: "1",
             display: "flex",
@@ -50,8 +51,8 @@ const AccountCard = (props) => {
             justifyContent: "space-between",
             overflow: "hidden",
       }}>
+            <div style={{flexBasis: "47%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{((props.account.username) ? props.account.username : "Please Login")}</div>
             <div style={{flexBasis: "47%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{props.account.email}</div>
-            <div style={{flexBasis: "47%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", webkitTextSecurity: "disc"}}>{props.account.password}</div>
           </div>
         </div>
         <div style={{

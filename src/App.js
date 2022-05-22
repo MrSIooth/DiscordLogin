@@ -20,7 +20,7 @@ const App = () => {
       });
   }, []);
 
-  const setAccount = async (email, password) => {
+  const setAccount = async (email, password, username, avatar) => {
     if (email === "" || password === ""){
         setAddError("Missing parameter")
       return;
@@ -43,11 +43,38 @@ const App = () => {
     setAddError("")
     setEmail("")
     setPassword("")
-    accounts.push({email: email, password: password})
+    accounts.push({email: email, password: password, username: username, avatar: avatar})
     obj[key] = accounts
     browser.storage && browser.storage.sync.set(obj).then(() => {});
     setAccounts(accounts);
   }
+
+const updateAccount = async (email, password, username, avatar) => {
+  if (email === "" || password === ""){
+    setAddError("Missing parameter")
+    return;
+  }
+  const key = "DiscordLogin"
+  let accounts
+  let obj = {}
+  if (browser.storage) {
+    let result = await browser.storage.sync.get([key])
+    accounts = result[key];
+  }
+  if (!accounts)
+      accounts = []
+  for (let account of accounts) {
+    if (account.email === email) {
+      account.password = password
+      account.username = username
+      account.avatar = avatar
+      break
+    }
+  }
+  obj[key] = accounts
+  browser.storage && browser.storage.sync.set(obj).then(() => {});
+  setAccounts(accounts);
+}
 
   const loginErrorFunct = (error) => {
     setLoginError(error)
@@ -83,7 +110,17 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setAccount(email, password)
+    let usersData
+    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+      browser.tabs.sendMessage(tabs[0].id, {email: email, password: password, relaod: false}).then((response) => {
+        console.log(response);
+        if (response.code === 200) {
+          usersData = response.data
+        }
+        console.log(usersData)
+        setAccount(email, password, usersData?.username, usersData?.avatar)
+      });
+    });
   }
 
   return (
@@ -109,7 +146,7 @@ const App = () => {
       </header>
       {(loginError && loginError !== "") && <p style={{margin: "0px 0px 10px 0px", color: "red"}}>{loginError}</p>}
       <div>
-        {accounts && accounts.length > 0 && <AccountsRows accounts={accounts} removeAccount={removeAccount} loginErrorFunct={loginErrorFunct} changeOrder={changeOrder}/>
+        {accounts && accounts.length > 0 && <AccountsRows accounts={accounts} removeAccount={removeAccount} updateAccount={updateAccount} loginErrorFunct={loginErrorFunct} changeOrder={changeOrder}/>
         }
         </div>
       <div style={{
